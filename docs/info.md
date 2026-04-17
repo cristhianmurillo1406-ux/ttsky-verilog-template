@@ -1,4 +1,4 @@
-## How it works
+## How it workss
 
 This design implements a 4-bit synchronous counter.
 
