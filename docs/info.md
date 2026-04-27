@@ -1,22 +1,16 @@
-## How it workss
+# Smart Counter
 
-This design implements a 4-bit synchronous counter.
+This project implements a 4-bit counter with:
 
-The counter increments its value on every rising edge of the clock signal.
-The clock is provided through ui_in[0].
+- Start control
+- Reset
+- Up/Down direction
 
-When reset (rst_n) is low, the counter is cleared to 0.
+## Inputs
 
-The counter output is mapped to uo_out[3:0].
+- ui_in[0]: start
+- ui_in[1]: up/down
 
----
+## Outputs
 
-## How to test
-
-1. Apply reset (rst_n = 0) to initialize the counter.
-2. Release reset (rst_n = 1).
-3. Toggle ui_in[0] to generate a clock signal.
-4. Observe the output on uo_out[3:0].
-
-The output should increment in binary:
-0000 → 0001 → 0010 → ... → 1111 → 0000
+- uo_out[3:0]: counter value

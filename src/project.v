@@ -1,38 +1,42 @@
-/*
- * Copyright (c) 2024 Your Name
- * SPDX-License-Identifier: Apache-2.0
- */
-
-`default_nettype none
-
-module tt_um_example (
-    input  wire [7:0] ui_in,    // Dedicated inputs
-    output wire [7:0] uo_out,   // Dedicated outputs
-    input  wire [7:0] uio_in,   // IOs: Input path
-    output wire [7:0] uio_out,  // IOs: Output path
-    output wire [7:0] uio_oe,   // IOs: Enable path (active high: 0=input, 1=output)
-    input  wire       ena,      // always 1 when the design is powered, so you can ignore it
-    input  wire       clk,      // clock
-    input  wire       rst_n     // reset_n - low to reset
+module smart_counter (
+    input wire clk,
+    input wire reset,
+    input wire start,
+    input wire up_down,
+    output reg [3:0] count
 );
 
-// INSTANCIA DEL CONTADOR
+always @(posedge clk) begin
+    if (reset)
+        count <= 4'b0000;
+    else if (start) begin
+        if (up_down)
+            count <= count + 1;
+        else
+            count <= count - 1;
+    end
+end
 
-wire rst = ~rst_n;
-wire [3:0] count;
+endmodule
 
-contador my_counter (
-	.clk(clk),
-	.rst(rst),
-	.count(count)
-)
 
-  assign uo_out [3:0] = count;
-  assign uo_out [7:4] = 0;
-  assign uio_out = 0 ;
-  assign uio_oe = 0;
+module tt_um_cristhian_counter (
+    input wire [7:0] ui_in,
+    output wire [7:0] uo_out,
+    input wire clk,
+    input wire rst_n
+);
 
-  // List all unused inputs to prevent warnings
-  wire _unused = &{ena, clk, rst_n, 1'b0};
+wire reset = ~rst_n;
+
+smart_counter counter_inst (
+    .clk(clk),
+    .reset(reset),
+    .start(ui_in[0]),
+    .up_down(ui_in[1]),
+    .count(uo_out[3:0])
+);
+
+assign uo_out[7:4] = 4'b0000;
 
 endmodule
